@@ -5,7 +5,7 @@ servidor_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 servidor_socket.bind(('localhost', 12345))
 servidor_socket.listen(1)  # Un cliente
 
-print("Esperando conexión del juego...")
+print("Esperando conexion del juego...")
 
 cliente, direccion = servidor_socket.accept()
 print(f"Conexion con Pong en direccion IP: {direccion}")
