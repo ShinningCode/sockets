@@ -17,7 +17,7 @@ class Pong_ball:
         self.imagen = py.image.load(fichero_imagen).convert_alpha()
 
         # Nuevas dimensiones de la Pelota
-        self.ancho, self.alto = 20, 20  # Ajusta las dimensiones según lo que desees
+        self.ancho, self.alto = 20, 20  # Ajusta las dimensiones
 
          # Escala la imagen a las nuevas dimensiones
         self.imagen = py.transform.scale(self.imagen, (self.ancho, self.alto))
