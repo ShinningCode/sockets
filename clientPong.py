@@ -23,7 +23,7 @@ class Pong_ball:
         self.imagen = py.transform.scale(self.imagen, (self.ancho, self.alto))
 
         # Posición de la Pelota
-        random = rnd.randint(0, VENTANA_HORI - self.ancho) - rnd.randint(0, VENTANA_HORI - self.ancho) * rnd.randint(0, VENTANA_HORI - self.ancho)
+        random = rnd.randint(0, VENTANA_HORI - self.ancho) 
         self.x = VENTANA_HORI / random - self.ancho / random  # Valor aleatorio dentro del ancho de la ventana
         self.y = VENTANA_VERT / random - self.alto / random   # Valor aleatorio dentro del alto de la ventana
 
@@ -48,6 +48,7 @@ class Pong_ball:
         self.y = rnd.randint(0, VENTANA_VERT - self.alto)
         self.dir_x = -self.dir_x
         self.dir_y = rnd.choice([-5, 5])
+        return f"{self.x}\t|\t{self.y}"  # Devuelve la posición al reiniciar
 
 def main():
     py.init()
@@ -73,10 +74,15 @@ def main():
 
         py.display.flip()
         py.time.Clock().tick(FPS)
+        
+    
+    datos = pelota.reiniciar()
 
-    datos = "Datos del juego"
-    cliente_socket.send(datos.encode())
-
+    if datos != 0:
+        cliente_socket.send(datos.encode())
+    # datos = "Datos del juego"
+    # cliente_socket.send(f"{pelota.dir_x,pelota.dir_y}".encode())
+    
     cliente_socket.close()
 
     py.quit()
