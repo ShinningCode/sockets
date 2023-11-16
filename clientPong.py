@@ -11,8 +11,6 @@ NEGRO = (0, 0, 0)
 
 class Pong_ball:
     def __init__(self, fichero_imagen):
-        # --- Atributos de la Clase ---
-
         # Imagen de la Pelota
         self.imagen = py.image.load(fichero_imagen).convert_alpha()
 
@@ -25,6 +23,7 @@ class Pong_ball:
         random = rnd.randint(0, VENTANA_HORI - self.ancho)
         self.x = VENTANA_HORI / random - self.ancho / random  # Valor aleatorio dentro del ancho de la ventana
         self.y = VENTANA_VERT / random - self.alto / random  # Valor aleatorio dentro del alto de la ventana
+       
 
         # Dirección de movimiento de la Pelota
         self.dir_x = rnd.choice([-5, 5])
@@ -57,6 +56,7 @@ class Pong_paleta:
         self.imagen = py.transform.scale(self.imagen, (self.ancho, self.alto))
         self.x = VENTANA_HORI // 2 - self.ancho // 2  # Centrar la paleta horizontalmente
         self.y = VENTANA_VERT - self.alto  # Colocar la paleta en la parte inferior
+        self.dir_x = 0
 
     def golpear(self, pelota):
         if (
@@ -67,17 +67,34 @@ class Pong_paleta:
         ):
             pelota.dir_x = -pelota.dir_x
             pelota.x = self.x + self.ancho
-    
+
     def golpear_ia(self, pelota):
-        if (
-            pelota.x + pelota.ancho > self.x
-            and pelota.x < self.x + self.ancho
-            and pelota.y + pelota.alto > self.y
-            and pelota.y < self.y + self.alto
-        ):
-            pelota.dir_x = -pelota.dir_x
-            pelota.x = self.x - pelota.ancho
-    
+        # Predicción simple: mueve la paleta hacia la posición actual de la pelota
+        if pelota.dir_x > 0 and pelota.x > VENTANA_HORI // 2:
+            target_x = pelota.x
+        else:
+            target_x = VENTANA_HORI // 2
+
+        if self.x < target_x:
+            self.dir_x = 2
+        elif self.x > target_x:
+            self.dir_x = -2
+        else:
+            self.dir_x = 0
+
+        self.x += self.dir_x
+
+    def moverRand(self):
+        # Movimiento aleatorio más lento
+        random = rnd.choice([-2, 2])
+        self.dir_x = random
+        self.x += self.dir_x
+
+    def dontPass(self):
+        # Evitar que la raqueta se salga de la pantalla
+        self.x = max(0, min(self.x, VENTANA_HORI - self.ancho))
+
+
 def main():
     py.init()
 
@@ -103,6 +120,8 @@ def main():
         pelota.rebotar()
         paleta.golpear(pelota)
         paleta.golpear_ia(pelota)
+        paleta.moverRand()
+        paleta.dontPass()
 
         py.display.flip()
         py.time.Clock().tick(FPS)

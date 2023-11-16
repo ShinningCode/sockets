@@ -19,6 +19,6 @@ while True:
     # dir_x = cliente.recv(1024).decode()
     # dir_y = cliente.recv(1024).decode()
     
-    print(f"{datos}")
+    #print(f"{datos}")
 
 cliente.close()
